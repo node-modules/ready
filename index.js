@@ -1,34 +1,65 @@
 'use strict';
 
-function ready(flagOrFunction) {
-  this._ready = !!this._ready;
-  this._readyCallbacks = this._readyCallbacks || [];
+const is = require('is-type-of');
 
-  if (arguments.length === 0) {
-    // return a promise
-    // support `this.ready().then(onready);` and `yield this.ready()`;
-    return new Promise(function (resolve) {
-      if (this._ready) {
-        return resolve();
-      }
-      this._readyCallbacks.push(resolve);
-    }.bind(this));
-  } else if (typeof flagOrFunction === 'function') {
-    this._readyCallbacks.push(flagOrFunction);
-  } else {
-    this._ready = !!flagOrFunction;
+const IS_READY = Symbol('isReady');
+const READY_CALLBACKS = Symbol('readyCallbacks');
+
+class Ready {
+
+  constructor() {
+    this[IS_READY] = false;
+    this[READY_CALLBACKS] = [];
   }
 
-  if (this._ready) {
-    this._readyCallbacks.splice(0, Infinity).forEach(function(callback) {
-      process.nextTick(callback);
-    });
+  ready(flagOrFunction) {
+    // register a callback
+    if (flagOrFunction === undefined || is.function(flagOrFunction)) {
+      return this.register(flagOrFunction);
+    }
+
+    this.emit(flagOrFunction);
+  }
+
+  register(flagOrFunction) {
+    // support `this.ready().then(onready);` and `yield this.ready()`;
+    if (!flagOrFunction) {
+      return new Promise(resolve => {
+        if (this[IS_READY]) {
+          return resolve();
+        }
+        this[READY_CALLBACKS].push(resolve);
+      });
+    }
+
+    // this.ready(fn)
+    if (this[IS_READY]) {
+      flagOrFunction();
+    } else {
+      this[READY_CALLBACKS].push(flagOrFunction);
+    }
+  }
+
+  emit(flagOrFunction) {
+    this[IS_READY] = !!flagOrFunction;
+    // this.ready(true)
+    if (this[IS_READY]) {
+      this[READY_CALLBACKS]
+        .splice(0, Infinity)
+        .forEach(callback => process.nextTick(callback));
+    }
+  }
+
+  static mixin(obj) {
+    const ready = new Ready();
+    obj.ready = flagOrFunction => ready.ready(flagOrFunction);
   }
 }
 
 function mixin(object) {
-  object.ready = ready;
+  Ready.mixin(object);
 }
 
 module.exports = mixin;
 module.exports.mixin = mixin;
+module.exports.Ready = Ready;
