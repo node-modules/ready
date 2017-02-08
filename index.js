@@ -73,6 +73,7 @@ class Ready {
   static mixin(obj) {
     if (!obj) return;
     const ready = new Ready();
+    // delegate method
     obj.ready = flagOrFunction => ready.ready(flagOrFunction);
   }
 }
