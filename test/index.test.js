@@ -14,6 +14,23 @@ class SomeClass {
   }
 }
 
+describe('exports', () => {
+  it('should exports mixin', () => {
+    assert(ready.mixin);
+    assert(ready.mixin === ready);
+  });
+
+  it('should exports Ready', () => {
+    assert(ready.Ready);
+  });
+});
+
+describe('mixin', () => {
+  it('should not throw when mixin undefined', () => {
+    ready();
+  });
+});
+
 describe('inherits', () => {
 
   it('should have Ready properties', () => {
@@ -75,6 +92,12 @@ describe('ready', () => {
       done();
     }, 10);
   });
+
+  it('should ready when using other type', done => {
+    const someClass = new SomeClass();
+    someClass.ready(done);
+    someClass.ready(0);
+  });
 });
 
 describe('promise', () => {
@@ -94,6 +117,48 @@ describe('generator', () => {
       someClass.ready(true);
     }, 100);
     yield someClass.ready();
+  });
+});
+
+describe('error', () => {
+  it('should get error in callback', done => {
+    const someClass = new SomeClass();
+    someClass.ready(err => {
+      assert(err);
+      assert(err.message === 'error');
+      done();
+    });
+    someClass.ready(new Error('error'));
+  });
+
+  it('should get error in promise', done => {
+    const someClass = new SomeClass();
+    someClass.ready().then(err => {
+      assert(err);
+      assert(err.message === 'error');
+      done();
+    });
+    someClass.ready(new Error('error'));
+  });
+
+  it('should get error after ready in callback', done => {
+    const someClass = new SomeClass();
+    someClass.ready(new Error('error'));
+    someClass.ready(err => {
+      assert(err);
+      assert(err.message === 'error');
+      done();
+    });
+  });
+
+  it('should get error after ready in promise', done => {
+    const someClass = new SomeClass();
+    someClass.ready(new Error('error'));
+    someClass.ready().then(err => {
+      assert(err);
+      assert(err.message === 'error');
+      done();
+    });
   });
 });
 

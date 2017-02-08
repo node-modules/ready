@@ -1,4 +1,4 @@
-get-ready
+# get-ready
 =====
 
 [![NPM version][npm-image]][npm-url]
@@ -22,51 +22,56 @@ get-ready
 
 NodeJS mixin to add one-time ready event
 
-## Purpose
-Events are great. You should use events, but not for signaling ready! Ready implies state, and once you are ready, you stay ready.
+## Usage
 
-This is a module for everyone who has bound an event handler.on('ready', function() {}) that doesn't execute because you added the handler after the 'ready' event already fired.
-
-## Warning
-If you use this mixin, you must have 'ready', '_ready', and '_readyCallbacks' available on your class. Ready will stomp on these variables if you're trying to use them in your class.
-
-## Example
+Using `ready` or `ready.mixin` to add `ready` method to the given object.
 
 ```js
 const ready = require('get-ready');
+const obj = {};
+ready.mixin(obj);
 
-// example class that uses Ready
-function MyClass() {
-  this.someProperty = 'some value';
-}
-ready.mixin(MyClass.prototype);
+// register a callback
+obj.ready(() => console.log('ready'));
 
-// Normal class prototype functions
-MyClass.prototype.doSomeWork = function() {};
+// mark ready
+obj.ready(true);
+```
 
-// Create a new class that uses ready mixin
-var myClass = new MyClass();
+### Register
 
-// Add callback for when myClass is ready
-myClass.ready(function() {
-  console.log('I am now ready');
-});
+Register a callback to the callback stack, it will be called when mark as ready, see example above.
 
-myClass.doSomeWork();
+If the callback is undefined, register will return a promise.
 
-// We are now ready, fire callbacks!
-myClass.ready(true);
+```js
+obj.ready().then(() => console.log('ready'));
+obj.ready(true);
+```
 
-// Adding a new callback once we're already ready gets executed immediately
-myClass.ready(function() {
-  console.log('I came late to the party, but I will still execute.');
-});
+If it has been ready, the callback will be called immediately.
 
-// Ok, you can set the ready state to false now as well... for whatever reason
-myClass.ready(false);
-myClass.ready(function() {
-  console.log('I will not fire until you set ready to true again.');
-});
+```js
+// already ready
+obj.ready(true);
+obj.ready().then(() => console.log('ready'));
+```
+
+**Warning: the callback is called after nextTick**
+
+### Emit
+
+Mark it as ready, you can simply using `.ready(true)`.
+
+You alos can mark it not ready.
+
+```js
+obj.ready(true);
+// call immediately
+obj.ready(() => console.log('ready'));
+
+obj.ready(false);
+obj.ready(() => throw 'don\'t run');
 ```
 
 ## License

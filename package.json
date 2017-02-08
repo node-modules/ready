@@ -9,6 +9,9 @@
   "dependencies": {
     "is-type-of": "^1.0.0"
   },
+  "engines": {
+    "node": ">= 4.0.0"
+  },
   "devDependencies": {
     "autod": "^2.7.1",
     "egg": "^0.11.0",
