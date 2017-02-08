@@ -63,7 +63,7 @@ obj.ready().then(() => console.log('ready'));
 
 Mark it as ready, you can simply using `.ready(true)`.
 
-You alos can mark it not ready.
+You can also mark it not ready.
 
 ```js
 obj.ready(true);
@@ -73,6 +73,14 @@ obj.ready(() => console.log('ready'));
 obj.ready(false);
 obj.ready(() => throw 'don\'t run');
 ```
+
+When exception throws, you can pass an error object, then the callback will receive it as the first argument.
+
+```js
+obj.ready(err => console.log(err));
+obj.ready(new Error('err'));
+```
+
 
 ## License
 
