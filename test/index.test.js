@@ -133,7 +133,7 @@ describe('error', () => {
 
   it('should get error in promise', done => {
     const someClass = new SomeClass();
-    someClass.ready().then(err => {
+    someClass.ready().catch(err => {
       assert(err);
       assert(err.message === 'error');
       done();
@@ -154,7 +154,7 @@ describe('error', () => {
   it('should get error after ready in promise', done => {
     const someClass = new SomeClass();
     someClass.ready(new Error('error'));
-    someClass.ready().then(err => {
+    someClass.ready().catch(err => {
       assert(err);
       assert(err.message === 'error');
       done();

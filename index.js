@@ -32,11 +32,18 @@ class Ready {
   register(func) {
     // support `this.ready().then(onready);` and `yield this.ready()`;
     if (!func) {
-      return new Promise(resolve => {
-        if (this[IS_READY]) {
-          return resolve(this[READY_ARG]);
+      return new Promise((resolve, reject) => {
+        function func(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
         }
-        this[READY_CALLBACKS].push(resolve);
+        if (this[IS_READY]) {
+          return func(this[READY_ARG]);
+        }
+        this[READY_CALLBACKS].push(func);
       });
     }
 
