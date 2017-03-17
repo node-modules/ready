@@ -5,11 +5,9 @@ module.exports = {
   prefix: '^',
   devprefix: '^',
   exclude: [
-    'test/fixtures',
   ],
   devdep: [
     'autod',
-    'egg',
     'egg-bin',
     'egg-ci',
     'eslint',
@@ -18,5 +16,6 @@ module.exports = {
   keep: [
   ],
   semver: [
+    'egg-bin@1',
   ],
 };
