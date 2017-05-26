@@ -1,30 +1,33 @@
 {
-  "name": "get-ready",
-  "version": "2.0.1",
+  "name": "get-ready-browser",
+  "version": "1.0.0",
   "description": "mixin to add one-time ready event callback handler",
-  "main": "index.js",
+  "main": "lib/index.js",
   "files": [
-    "index.js"
+    "lib",
+    "src"
   ],
-  "dependencies": {
-    "is-type-of": "^1.0.0"
-  },
   "engines": {
     "node": ">= 4.0.0"
   },
   "devDependencies": {
-    "autod": "^2.7.1",
-    "egg-bin": "^1.10.3",
-    "egg-ci": "^1.5.0",
-    "eslint": "^3.17.1",
-    "eslint-config-egg": "^3.2.0"
+    "autod": "^2.8.0",
+    "babel-cli": "^6.24.1",
+    "babel-istanbul": "^0.12.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015-ie": "^6.7.0",
+    "eslint": "^3.19.0",
+    "eslint-config-egg": "^4.2.0",
+    "mocha": "^3.4.2"
   },
   "scripts": {
     "autod": "autod",
-    "lint": "eslint .",
-    "test": "npm run lint && egg-bin test",
-    "cov": "egg-bin cov",
-    "ci": "npm run lint && npm run cov"
+    "lint": "eslint --ext .js src test",
+    "build": "rm -rf lib && babel src --out-dir lib",
+    "test": "babel-node $(npm bin)/babel-istanbul cover $(npm bin)/_mocha -- --no-timeouts",
+    "ci": "npm run lint && npm run test",
+    "pub": "npm run build && npm publish && rm -rf lib && git push origin"
   },
   "repository": {
     "type": "git",
@@ -40,7 +43,7 @@
   "bugs": {
     "url": "https://github.com/node-modules/ready/issues"
   },
-  "ci": {
-    "version": "4, 6, 7"
+  "dependencies": {
+    "babel-runtime": "^6.23.0"
   }
 }

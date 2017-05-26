@@ -1,7 +1,6 @@
-'use strict';
 
-const assert = require('assert');
-const ready = require('../');
+import assert from 'assert';
+import ready from '..';
 
 class SomeClass {
   constructor() {
@@ -163,5 +162,5 @@ describe('error', () => {
 });
 
 function nextTick() {
-  return done => process.nextTick(done);
+  return done => setTimeout(done);
 }

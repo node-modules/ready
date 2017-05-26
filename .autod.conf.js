@@ -4,18 +4,14 @@ module.exports = {
   write: true,
   prefix: '^',
   devprefix: '^',
-  exclude: [
-  ],
   devdep: [
     'autod',
-    'egg-bin',
-    'egg-ci',
     'eslint',
     'eslint-config-egg',
-  ],
-  keep: [
-  ],
-  semver: [
-    'egg-bin@1',
-  ],
+    'babel-cli',
+    'babel-istanbul',
+    'babel-plugin-add-module-exports',
+    'babel-preset-es2015-ie',
+    'mocha',
+  ]
 };

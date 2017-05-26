@@ -1,3 +1,11 @@
 {
-  "extends": "egg"
+  "extends": "egg",
+  "env": {
+    "browser": true,
+    "node": false
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  }
 }
